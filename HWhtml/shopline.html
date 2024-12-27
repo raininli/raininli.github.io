@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+             margin: 0;
+             padding: 0;
+             list-style: none;
+             /* font-size: 0; */
+             font-family: 思源黑體 , 微軟正黑體 , 蘋方黑體 , 華康麗黑體 , Helvetica , Arial , sans-serif , serif;
+         }
+         .header{
+            background-color: rgb(230, 149, 83);
+            line-height: 30px;
+
+         }
+        .header a{
+            display: block;
+            padding: 8px 30px;
+            text-align:center;
+            margin: auto;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .container{
+            margin: auto;
+            width: 1024px;
+        }
+        .navbar{
+            background-color: rgb(235, 241, 248);
+            padding: 3px 0 5px 0;
+        }
+        .login {
+            display: flex;
+            justify-content: flex-end;
+            line-height: 25px;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .login a{
+            text-decoration: none;
+            color: black;
+        }
+        .top-list{
+            margin-top: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            line-height: 48px;
+            justify-content: space-between;
+        }
+        .top-list img{
+            margin-top:11px ;
+            width: 160px;
+            height: 26px;
+        }
+
+        ul.list {
+            display: flex;
+            width: 700px;
+            justify-content:space-around;
+            font-size: 16px;
+            
+        }
+        ul.list a{
+            text-decoration: none;
+            color: black;
+        }
+        ul.detail{
+            display: none;
+        }
+        .navbar .free{
+            display: inline-block;
+            height: 48px;
+            width: 144px;
+            line-height: 48px;
+            background-color: rgb(0, 97, 255);
+            color: #fff;
+            text-align: center;
+            border-radius: 10px;
+        }
+        .banner{
+            background-color: rgb(235, 241, 248);
+            padding-top: 64px;
+        }
+        .banner .box{
+            display: flex;
+            justify-content: space-between;
+        }
+        .infoFir{
+            padding: 80px 5px;
+            width: 500px;
+        }
+        .infoFir h1{
+            font-size: 40px;
+        }
+        .infoFir p{
+            color: #888;
+            padding-top: 30px;
+            padding-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .infoFir .free14 a{
+            display: block;
+            text-decoration: none;
+            height: 48px;
+            width: 300px;
+            line-height: 48px;
+            background-color: rgb(0, 97, 255);
+            color: #fff;
+            text-align: center;
+            border-radius: 10px;
+        }
+        .infoFir span{
+            color: #888;
+            font-size: 81.25%;
+        }
+        .box img{
+            border-radius: 210px 210px 0 0;
+            height: 450px;
+            justify-content: flex-end;
+            padding-top: 15px;
+        }
+        .space{
+            background-color: rgb(235, 241, 248);
+            opacity: 80%;
+            height: 80px;
+        }
+        .infoSec{
+            background-color: rgba(235, 241, 248, 0.637);
+            padding: 80px 0px;
+        }
+        .infoSec h2{
+            font-size: 32px;
+            text-align: center;
+            line-height: 50px;
+        }
+        .infoSec p{
+            margin-top: 20px;
+            font-size: 15px;
+        }
+
+
+
+
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="#">🎊 助攻節慶商機！新戶開店補貼多重送 👉</a>
+    </div>
+
+    <div class="navbar">
+        <div class="container">
+            <div class="login">
+                <a href="#">登入</a>
+                <div class="langSelect">
+                    <img src="ShoplineImg/icon/icon0.png">
+                    <span>台灣</span>
+                </div>
+            </div>
+            <nav class="top-list">
+                <img src="ShoplineImg/SHOPLINE.png">
+                <ul class="list">
+                    <li>
+                        <a href="#">產品核心</a>
+                    </li>
+                    <li>
+                        <div class="btn">
+                            <span>新手上路</span>
+                            <ul class="detail">
+                                <li><a href="#">開店諮詢</a></li>
+                                <li><a href="#">開店說明會</a></li>
+                                <li><a href="#">開店秘技</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="btn">
+                            <span>開店服務</span>
+                            <ul class="detail">
+                                <li><a href="#">網路開店</a></li>
+                                <li><a href="#">社群購物</a></li>
+                                <li><a href="#">零售POS</a></li>
+                                <li><a href="#">跨境店商方案</a></li>
+                                <li><a href="#">更多功能應用</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="btn">
+                            <span>行銷推廣</span>
+                            <ul class="detail">
+                                <li><a href="#">數位廣告</a></li>
+                                <li><a href="#">其他媒體與服務</a></li>
+                                <li><a href="#">社群店商工具包</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="btn">
+                            <span>營運管理</span>
+                            <ul class="detail">
+                                <li><a href="#">金流服務</a></li>
+                                <li><a href="#">物流服務</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="btn">
+                            <span>方案費用</span>
+                            <ul class="detail">
+                                <li><a href="#">開店方案</a></li>
+                                <li><a href="#">功能模組</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="btn">
+                            <span>更多資源</span>
+                            <ul class="detail">
+                                <li><a href="#">開店資源圈</a></li>
+                                <li><a href="#">擴充功能商店</a></li>
+                                <li><a href="#">新手問答</a></li>
+                                <li><a href="#">電商教室</a></li>
+                                <li><a href="#">DreamingBig 創品牌</a></li>
+                                <li><a href="#">SHOPLINE TRENDS 電商數據庫</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+                <div class="free">免費試用</div>
+            </nav>
+        </div>
+    </div>
+
+    <div class="banner">
+        <div class="container">
+            <div class="box">
+                <div class="infoFir">
+                    <h1>
+                        <div>想在哪開店創業?</div>
+                        <div>不管是網路開店</div>
+                        <div>SHOPLINE一站輕鬆開賣</div>
+                    </h1>
+                    <p>從個人賣家到國際品牌，都能以 SHOPLINE 實現全通路零售，快速拓展市場到世界各地，輕鬆開始你的『 店 』商生意！</p>
+                        <div class="free14"><a href="#">免費試用14天</a></div>
+                        <span>*無須綁定信用卡提供付款資訊</span>
+                </div>
+                <div class="img-box"><img src="ShoplineImg/banner.png"></div>
+            </div>
+        </div>
+    </div>
+    <div class="space"></div>
+    <div class="infoSec">
+        <div class="container">
+            <h2>
+                <div>單一平台就能助你</div>
+                <div>在全通路輕鬆開店創業</div>
+            </h2>
+            <p>從網路商店架站到實體門市管理，只需要一個平台，就能輕鬆實現開店創業，並能同步管理所有銷售管道，SHOPLINE 助你賣得更多、賣得更好！</p>
+        </div>
+    </div>
+
+
+</body>
+</html>
