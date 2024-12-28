@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>固定導覽列範例</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* 設定導航欄的樣式 */
+.navbar {
+    position: -webkit-sticky; /* 確保在WebKit瀏覽器中的兼容性 */
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background-color: transparent; /* 初始背景為透明 */
+    color: black;
+    padding: 10px 0;
+    transition: background-color 0.3s; /* 平滑過渡效果 */
+    z-index: 1000; /* 確保導航欄在其他元素之上 */
+}
+
+/* 導航欄內的連結樣式 */
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-around; /* 平均分布導航項目 */
+}
+
+.navbar ul li {
+    display: inline;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: black;
+    padding: 10px 20px;
+    display: block;
+}
+
+/* 導航欄連結的懸停效果 */
+.navbar ul li a:hover {
+    background-color: #575757;
+    color: white;
+}
+
+/* 使用偽元素來實現背景顏色變化 */
+.navbar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #333; /* 固定時的背景顏色 */
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s; /* 平滑過渡效果 */
+}
+
+.navbar.sticky::before {
+    opacity: 1;
+}
+
+/* 主體內容部分 */
+.content {
+    margin-top: 60px; /* 確保內容不被固定的導航欄遮擋 */
+    padding: 20px;
+}
+
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="content">
+        <!-- 您的網頁內容 -->
+        <p style="height: 2000px;">長內容模擬滾動效果...</p>
+    </div>
+</body>
+</html>
