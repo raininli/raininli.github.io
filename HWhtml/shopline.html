@@ -74,6 +74,31 @@
             width: 160px;
             height: 26px;
         }
+        .top-list ul li{
+            box-sizing: border-box;
+            border-bottom: rgb(0, 97, 255);
+            /* transition:underline  1s 2s ease; */
+        }
+
+        .top-list ul li:hover{
+            text-decoration: underline solid rgb(0, 97, 255);
+            text-underline-offset: 10px;
+            /* transition:all 2s  */
+            /* box-sizing: border-box;
+            border-bottom: rgb(0, 97, 255); */
+        }
+        
+        /* @keyframes top-listhover{
+            0%{
+                text-decoration: underline solid rgb(0, 97, 255);
+                text-underline-offset: 10px;
+                width: 5px;
+            }
+            100%{
+                width:100%;
+            }
+        } */
+        
 
         ul.list {
             display: flex;
@@ -207,7 +232,15 @@
             margin-top: 40px;
         }
         .textbox .link a{
+            text-decoration: none;
             color: rgb(0, 97, 255);
+        }
+        .textbox .link span{
+            text-decoration: underline solid;
+            text-underline-offset: 8px;
+        }
+        .textbox .link .icon{
+            display: inline;
         }
         .itembox img{
             height: 95%;
@@ -357,7 +390,10 @@
                     <li>獨有網址 ＆ SSL 安全憑證</li>
                     <li>開放 HTML／CSS 編輯</li>
                 </ul>
-                <div class="link"><a href="#"><span>看看開店秘技</span>→</a></div>
+                <div class="link">
+                    <a href="#">
+                        <span>看看開店秘技</span>
+                        <div class="icon">→</div></a></div>
             </div>
             <div class="imgbox"><img src="ShoplineImg/ad/ad1.webp" alt=""></div>
         </div>
@@ -376,7 +412,9 @@
                     <li>超商代碼／條碼繳費</li>
                     <li>發票開立與串接</li>
                 </ul>
-                <div class="link"><a href="#">了解更多金物流→</a></div>
+                <div class="link"><a href="#">
+                    <span>了解更多金物流</span>
+                    <div class="icon">→</div></a></div>
             </div>
             <div class="imgbox"><img src="ShoplineImg/ad/ad2.webp" alt=""></div>
         </div><div class="itembox itembox3">
