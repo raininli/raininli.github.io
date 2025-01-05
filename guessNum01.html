@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>1A2B Game</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  </head>
+  <body>
+    <h2 class="d-flex justify-content-center mt-3">Guess the Number - 1A2B</h2>
+    <div class="container text-center" style="max-width: 500px;">
+        <div class="btn-group mb-3 w-100" role="group" aria-label="Basic outlined example">
+            <button type="button" id="start" class="btn btn-outline-secondary w-100">Start</button>
+            <button type="button" id="restart" class="btn btn-outline-secondary w-100">Restart</button>
+            <button type="button" id="showAnswer" class="btn btn-outline-secondary w-100">Show Answer</button>
+        </div>
+
+    
+        <div class="input-group">
+            <span class="input-group-text">Guess</span>
+            <input type="text" id="input" class="form-control" placeholder="Enter 4 unique digits" minlength="4" maxlength="4" required>
+            <button id="go" class="btn btn-outline-secondary" type="button" id="button-addon2">Go!</button>
+          </div>
+          <ul class="list-group mt-3"></ul>
+
+    </div>
+    
+
+    <!-- 按shoeAnswer後出現的modal -->
+    <div class="modal customAlert" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">The answer is</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <span></span>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="restartGame()">Restart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const start = document.querySelector("#start");
+      const restart = document.querySelector("#restart");
+      const showAnswer = document.querySelector("#showAnswer");
+      const customAlert = document.querySelector(".customAlert");
+      const input = document.querySelector("#input");
+      const go = document.querySelector("#go");
+      const ul = document.querySelector(".list-group");
+      let answerArr=[];
+
+      window.onload = function(){
+        prestart();
+      }
+
+      function prestart(){
+        start.disabled = false;
+        restart.disabled = true ;
+        showAnswer.disabled = true ;
+        go.disabled = true ;
+        input.disabled = true;
+      }
+
+      function isStart(){
+        start.disabled = true;
+        restart.disabled = false ;
+        showAnswer.disabled = false ;
+        go.disabled = false ;
+        input.disabled = false;
+      }
+
+      //--按start會跑出4個不重複的Random數字
+      start.addEventListener("click",getRandom);
+
+      function getRandom(){
+        answerArr = [];
+        let pool =  ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+        for(i=0;i<4;i++){
+          let index = Math.floor(Math.random()*pool.length);
+          answerArr.push(pool[index]);
+          pool.splice(index,1)
+        }
+        console.log(answerArr);
+        isStart();
+      }
+
+      //--按restart會重新開始
+      restart.addEventListener("click",restartGame);
+      function restartGame(){
+        input.value="";
+        ul.innerHTML = "";
+        getRandom();
+        alert("答案已更新，請重新猜題")
+      }
+
+      //--按showAnswer
+      showAnswer.addEventListener("click",function(){
+        const alertSpan = customAlert.querySelector("span");
+        alertSpan.textContent = `答案是 ${answerArr.join("")}`;
+      
+        //使用 Bootstrap Modal 顯示，才能處理按下 ESC 鍵關閉或點擊背景關閉的功能
+        //原本是:customAlert.style.display = "block";
+        const modalInstance = new bootstrap.Modal(customAlert);
+        modalInstance.show();
+      })
+
+
+      //--設定input只能輸入4個不一樣的數字
+      input.addEventListener("input",function(e){
+        const digit = new Set(input.value);
+        if(digit.size !== input.value.length){
+          alert("請輸入 4 個不重複的數字！");
+          input.value = input.value.slice(0, -1);
+        }
+      })
+      input.addEventListener("keydown",function(e){
+        if(e.key == "Enter"){
+          go.click();
+        }
+      })
+
+      //--按go猜答案
+      go.addEventListener("click",showHint);
+      function showHint(){
+        //---遊戲邏輯---
+        let aCount = 0;
+        let bCount = 0;
+        let inputArr = input.value.split("")
+        if(input.value.length<4){
+          alert("請輸入4個不同的數字")
+          input.value=""
+          return;
+        }
+        
+        for(let i=0;i<4;i++){
+          if(answerArr[i]==inputArr[i]){
+            aCount++;
+          }
+          else if(answerArr.includes(inputArr[i])){
+            bCount++;
+          }
+        }
+
+        // ---建立list的畫面---
+        //建立list
+        const li = document.createElement("li");
+        li.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
+
+        //建立badge(1A2B)
+        const badge = document.createElement("span");
+        badge.classList.add("badge", "text-bg-primary", "rounded-pill");
+        badge.textContent = `${aCount}A${bCount}B`; 
+
+        //使用者輸入的內容
+        const textSpan = document.createElement("span");
+        textSpan.textContent = input.value;
+
+        //調整位置
+        li.prepend(badge);
+        li.appendChild(textSpan);
+
+        //加到ul內
+        ul.appendChild(li);
+
+        if(badge.textContent=="4A0B"){
+          alert("恭喜通關!!")
+        }
+        
+      }
+      
+
+
+      
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
+</html>

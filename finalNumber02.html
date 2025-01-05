@@ -108,8 +108,6 @@
     </div>
 
     <script>
-
-        
         let answer;
         const getRandom = document.querySelector(".gamestart");
         const numlist = document.querySelectorAll(".btnNum");
@@ -130,47 +128,59 @@
         getRandom.addEventListener("click",startGame)
 
         function getRandomInt(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min+1) + min); //The maximum and the minimum are inclusive
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min+1) + min); //The maximum and the minimum are inclusive
         }
 
      
-    //調整input的值
-    numlist.forEach(function(el){
-        el.addEventListener("click",function(e){
-            let val = e.target.textContent;
-            document.querySelector("input").value += val;
+        //調整input的值
+        numlist.forEach(function(el){
+            el.addEventListener("click",function(e){
+                let val = e.target.textContent;
+                if(input.value==="0"){
+                    if(val==="0"){
+                        e.stopPropagation();
+                        return;
+                    }else{
+                       input.value="" 
+                    } 
+                }
+                if(parseInt(input.value+val)<=100){
+                    input.value += val;
+                }
+                
+            })
         })
-    })
 
-    //guess
-    guessNum.addEventListener("click",function(){
-        if(answer === undefined){
-            alert("請先開始遊戲");
-            return;
-        }
-        const userInput = parseInt(input.value);
-        if(userInput === answer){
-            alert("恭喜過關！")
-            startGame();
-        }
-        else if(answer<userInput){
-            max = userInput;
-            hint.textContent=`終極密碼${min}~${max}`;
-            input.value = "";
-        }else{
-            min=userInput;
-            hint.textContent=`終極密碼${min}~${max}`;
-            input.value = "";
-        }
-    })
-    
+        //guess
+        guessNum.addEventListener("click",function(){
+            if(answer === undefined){
+                alert("請先開始遊戲");
+                input.value = "";
+                return;
+            }
+            const userInput = parseInt(input.value);
+            if(userInput === answer){
+                alert("恭喜過關！")
+                startGame();
+            }
+            else if(answer<userInput){
+                max = userInput;
+                hint.textContent=`終極密碼${min}~${max}`;
+                input.value = "";
+            }else{
+                min=userInput;
+                hint.textContent=`終極密碼${min}~${max}`;
+                input.value = "";
+            }
+        })
+        
 
-    //clear
-    clearBtn.addEventListener("click",function(){
-        input.value = input.value.slice(0, -1);  // 刪除最後一個字元
-    });
+        //clear
+        clearBtn.addEventListener("click",function(){
+            input.value = input.value.slice(0, -1);  // 刪除最後一個字元
+        });
 
 
 
