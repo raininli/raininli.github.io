@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/littleMary03.css">
+  </head>
+
+  <body>
+    <div class="container">
+        <div class="row row-circle">
+            <div class="col col-circle" id="1"></div>
+            <div class="col col-circle" id="2"></div>
+            <div class="col col-circle" id="3"></div>
+            <div class="col col-circle" id="4"></div>
+            <div class="col col-circle" id="5"></div>
+            <div class="col col-circle" id="6"></div>
+            <div class="col col-circle" id="7"></div>
+            <div class="col col-circle" id="24"></div>
+            <div class="center-box" id="25">
+                <span class="spanChips">0</span><br>
+                <span class="spanMoney">獲利總金額 : 0 元</span>
+            </div>
+            <div class="col col-circle" id="8"></div>
+            <div class="col col-circle" id="23"></div>
+            <div class="col col-circle" id="9"></div>
+            <div class="col col-circle" id="22"></div>
+            <div class="col col-circle" id="10"></div>
+            <div class="col col-circle" id="21"></div>
+            <div class="col col-circle" id="11"></div>
+            <div class="col col-circle" id="20"></div>
+            <div class="col col-circle" id="12"></div>
+            <div class="col col-circle" id="19"></div>
+            <div class="col col-circle"id="18"></div>
+            <div class="col col-circle" id="17"></div>
+            <div class="col col-circle" id="16"></div>
+            <div class="col col-circle" id="15"></div>
+            <div class="col col-circle" id="14"></div>
+            <div class="col col-circle"id="13"></div>
+        </div>
+        <button type="button" class="btn btn-start btn-outline-secondary mb-3 d-block" onclick="start()">Start</button>
+
+        <div class="selected">
+            <div class="row row-sel">
+                <div class="col col-sel">100</div>
+                <div class="col col-sel">50</div>
+                <div class="col col-sel">20</div>
+                <div class="col col-sel">20</div>
+                <div class="col col-sel">10</div>
+            </div>
+            <div class="row row-sel">
+                <div class="col col-sel col-chips" id="inputGroupSelect01">0</div>
+                <div class="col col-sel col-chips" id="inputGroupSelect02">0</div>
+                <div class="col col-sel col-chips" id="inputGroupSelect03">0</div>
+                <div class="col col-sel col-chips" id="inputGroupSelect04">0</div>
+                <div class="col col-sel col-chips" id="inputGroupSelect05">0</div>
+            </div>
+            <div class="row row-sel">
+                <div class="col col-sel">
+                    <img src="goldenColor/77.svg" alt="">
+                </div>
+                <div class="col col-sel">
+                    <img src="goldenColor/apple.svg" alt="">
+                </div>
+                <div class="col col-sel">
+                    <img src="goldenColor/bell.svg" alt="">
+                </div>
+                <div class="col col-sel">
+                    <img src="goldenColor/cheers.svg" alt="">
+                </div>
+                <div class="col col-sel">
+                    <img src="goldenColor/excellence.svg" alt="">
+                </div>
+            </div>
+            <div class="row row-sel">
+                <div class="col col-sel">
+                    <button class="btn w-100 chips-btn" data-target="inputGroupSelect01">押</button>
+                </div>
+                <div class="col col-sel">
+                    <button class="btn w-100 chips-btn" data-target="inputGroupSelect02">押</button>
+                </div>
+                <div class="col col-sel">
+                    <button class="btn w-100 chips-btn" data-target="inputGroupSelect03">押</button>
+                </div>
+                <div class="col col-sel">
+                    <button class="btn w-100 chips-btn" data-target="inputGroupSelect04">押</button>
+                </div>
+                <div class="col col-sel">
+                    <button class="btn w-100 chips-btn" data-target="inputGroupSelect05">押</button>
+                </div>
+            </div>
+        
+    </div>
+   
+    <script>
+        //------畫面修改-------
+        
+        const colcircle = document.querySelectorAll(".col-circle");
+        const boxArr = Array.from(colcircle);
+        const centerBox = document.querySelector(".center-box");
+        const spanChips = document.querySelector(".spanChips");
+        let remainingChips = 30;
+        spanChips.textContent = `您的籌碼剩餘 : ${remainingChips} 枚`;
+
+
+        //更改box的順序
+        boxArr.sort((a,b)=>{
+            return parseInt(a.id)-parseInt(b.id) 
+        })
+
+        // 將圖片依序分配到方塊
+        const images = [
+        "goldenColor/77.svg",
+        "goldenColor/apple.svg",
+        "goldenColor/bell.svg",
+        "goldenColor/cheers.svg",
+        "goldenColor/excellence.svg",
+        "goldenColor/bell.svg",
+        "goldenColor/apple.svg",
+        "goldenColor/excellence.svg"
+        ];
+
+        boxArr.forEach((box, index) => {
+            const imgIndex = index % images.length;
+            const img = document.createElement("img");
+            img.src = images[imgIndex];
+            box.appendChild(img);
+        });
+        
+
+        //-------遊戲邏輯--------
+        const btnStart = document.querySelector(".btn-start")
+        
+
+        function start() {
+            let maxRounds = 1;
+            let interval = 50; 
+            let currentRound = 0;
+            // let delay = 100;
+            // let maxDelay = 500; //~~~如何做出delay漸慢效果??
+            // if(currentRound>=maxRounds){
+            //     delay = Math.min(delay + 20, maxDelay)
+            //     setTimeout(runAnimation,delay)
+            // }
+
+            boxArr.forEach((box,index)=>{
+                box.classList.remove("selectedBox");
+            }) /*刪掉上一輪的selectedBox*/
+
+            btnStart.disabled = true;
+
+            // 定義動畫函式
+            function runAnimation() {
+                //是否能用jQuery的動畫效果，讓boxArr依序高亮?
+                boxArr.forEach((box, index) => {
+                    setTimeout(() => {
+                        box.classList.add("selectedBox");
+                    }, interval * index);
+                    setTimeout(() => {
+                        box.classList.remove("selectedBox");
+                    }, interval * (index + 1));
+                });
+            }  
+            
+            // 立即執行第一輪動畫
+            runAnimation();
+            currentRound++;
+
+            // 設定後續週期性動畫
+            const intervalId = setInterval(() => {
+                runAnimation();
+                currentRound++;
+
+                if (currentRound >= maxRounds) {
+                clearInterval(intervalId);// 停止 setInterval
+
+                    let array = boxArr.slice(0,Math.floor(Math.random() * boxArr.length));
+                    array.forEach((box, index) => {
+                    setTimeout(() => {
+                        box.classList.add("selectedBox");
+                    }, interval *( index + boxArr.length));
+                    setTimeout(() => {
+                        box.classList.remove("selectedBox");
+                    }, interval * (index + 1 + boxArr.length));
+                });
+            
+                setTimeout(() => {
+                    const lastBox = array[array.length - 1];
+                    if (lastBox) {
+                        lastBox.classList.add("selectedBox");
+                    }
+                    btnStart.disabled = false; 
+                }, interval * (array.length + boxArr.length));
+                }  
+                
+            }, interval * boxArr.length);
+            
+        }
+        
+        document.querySelectorAll(".chips-btn").forEach((button)=>{
+            button.addEventListener("click", () =>{
+                const targetId = button.getAttribute("data-target");
+                const targetElement = document.getElementById(targetId);
+                if(targetElement){
+                    let currentValue = parseInt(targetElement.textContent);
+                    targetElement.textContent = currentValue+1;
+                }
+                
+                // const spanMoney = document.querySelector(".spanMoney");
+                if (remainingChips > 0) {
+                remainingChips -= 1;
+                spanChips.textContent = `您的籌碼剩餘 : ${remainingChips} 枚`;
+                }
+            })
+        })
+    
+       
+
+
+      
+        
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>購物流程範例 - Checkbox 勾選商品</title>
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <!-- Element Plus CSS -->
+  <link
+    href="https://unpkg.com/element-plus/dist/index.css"
+    rel="stylesheet"
+  />
+  
+  <style>
+    *{
+      font-family: 思源黑體 , 微軟正黑體 , 蘋方黑體 , 華康麗黑體 , Helvetica , Arial , sans-serif , serif;
+    }
+    .step-active {
+      color: #39aedc;
+      font-weight: bold;
+    }
+    .bottom-reminder {
+      padding: 10px;
+      border-top: 1px solid #ddd;
+      font-size: 0.9rem;
+    }
+    .icon {
+      margin: 3px 4px 0px;
+      color: gray;
+      font-size:14px;
+    }
+    
+  </style>
+</head>
+
+<body>
+  <div id="app" class="container">
+    <!-- 3 step 標題 (簡易麵包屑或流程指示) -->
+    <nav aria-label="breadcrumb" class="mt-5">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item" :class="{'step-active': currentStep === 1}">
+            購物車
+          </li>
+          <el-icon class="icon"><arrow-right /></el-icon>
+          <li class="breadcrumb-item" :class="{'step-active': currentStep === 2}">
+            填寫資料與付款
+          </li>
+          <el-icon class="icon"><arrow-right /></el-icon>
+          <li class="breadcrumb-item" :class="{'step-active': currentStep === 3}">
+            訂購完成
+          </li>
+        </ol>
+      </nav>
+    <!-- 購物車提示(訂單僅能結帳同類型產品品) --><!-- Q: 是否規定此欄位? -->
+    <!-- Todo: 電腦版: <span><strong>購物車 :</strong> 訂單僅能結帳同類型產品</span> -->
+    <div class="alert alert-info">購物車 | 訂單僅能結帳同類型產品</div>
+    
+
+    <!-- Step 1：購物車 (含勾選框) -->
+    <div v-if="currentStep === 1">
+      <h6 class="mt-3">  <strong>旅遊商品</strong></h6>
+      <!-- Todo: 設定全選checkbox，可以讓勾選後下方卡片全部選取 -->
+      <div class="d-flex justify-content-between align-items-center">
+        <label style="cursor: pointer;">
+          <input
+                  type="checkbox"
+                  class="form-check-input"
+                  style="transform: scale(1.2);"
+                  v-model="selectAll"
+                />
+            <span> 全選({{ selectedItems.length }})</span>
+          </label>
+        <button class="btn btn-outline-secondary mb-2" @click="deleteSelected">
+          刪除已選取項目
+        </button>
+      </div>
+
+
+      <!-- 卡片使用js套入資料 -->
+      <!-- 以 row + flex-column 先定義手機版堆疊樣式；大尺寸(lg)以上改為flex-row -->
+      <div
+        class="card col-12 row g-2 align-items-center flex-column flex-md-row border-0"
+        v-for="(item, index) in cartItems"
+        :key="index"
+      >
+        <!-- 左側+中間資訊，手機版時在同一個col -->
+        <div class=" d-flex align-items-center mt-5">
+          <!-- 左側：Checkbox + 圖片 -->
+          <div class="col-4 col-md-3 d-flex align-items-center">
+            <input
+              type="checkbox"
+              class="form-check-input me-4"
+              v-model="item.checked"
+              :id="'itemCheck' + index"
+              style="transform: scale(1.2);"
+            />
+            <img
+              :src="item.img"
+              class="img-fluid rounded"
+              alt="商品圖片"
+              style="max-height: 120px; object-fit: cover;"
+            />
+          </div>
+          <!-- 中間：資訊文字 -->
+          <div class="col-8 d-flex flex-column flex-lg-row ">
+            
+              <div class="col-12 col-lg-6">
+                  <h5 class="card-title">{{ item.title }}</h5>
+                  <p class="card-subtitle">{{item.detail}}</p>
+              </div>
+              <p class="card-text mb-1 col-lg-3">{{ item.date }}</p>
+              <p class="card-text mb-1 col-lg-3">數量：{{ item.people }}</p>
+            </div>
+          
+        </div>
+
+        <!-- 右側：價格與移除按鈕 -->
+        
+        <div class="card-footer d-flex align-items-center justify-content-between border-0 bg-transparent">
+          <h5 class="fw-bold ms-5" style="color: #39aedc;">
+            TWD {{ item.price }}
+          </h5>
+          <button
+            class=" btn"
+            @click="removeItem(index)"
+          >
+          <el-icon><delete-filled /></el-icon>
+          </button>
+        </div>
+
+      <div class="bottom-reminder"></div>
+    </div>
+
+
+
+      <!-- 顯示勾選商品的總金額 / 下一步 -->
+      <div class="d-flex justify-content-end align-items-center mt-3">
+        <div class="me-3">
+          已勾選金額：
+          <strong>TWD {{ selectedTotalPrice }}</strong>
+        </div>
+        <button
+          class="btn btn-primary"
+          @click="goToStep(2)"
+          :disabled="selectedItems.length === 0"
+        >
+          下一步
+        </button>
+      </div>
+      
+    </div>
+
+    <!-- Step 2：填寫資料與付款 (只顯示勾選的商品) -->
+    <div v-else-if="currentStep === 2">
+      <h3 class="mb-3">填寫資料與付款</h3>
+
+      <!-- 已勾選商品清單 -->
+      <div
+        class="card mb-3"
+        v-for="(item, idx) in selectedItems"
+        :key="idx"
+      >
+        <div class="row g-0 align-items-center">
+          <div class="col-md-2">
+            <img
+              :src="item.img"
+              class="img-fluid rounded-start"
+              alt="商品圖片"
+              style="max-height: 80px; object-fit: cover;"
+            />
+          </div>
+          <div class="col-md-7">
+            <div class="card-body">
+              <h6 class="card-title">{{ item.title }}</h6>
+              <p class="card-text mb-1">日期：{{ item.date }}</p>
+              <p class="card-text mb-1">人數：{{ item.people }}</p>
+            </div>
+          </div>
+          <div class="col-md-3 d-flex justify-content-end p-3">
+            <span class="text-danger fw-bold">TWD {{ item.price }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3 text-end">
+        <strong>合計金額：TWD {{ selectedTotalPrice }}</strong>
+      </div>
+
+      <!-- Element Plus 表單 (填寫資料) -->
+      <el-form
+        :model="formData"
+        ref="formRef"
+        label-position="top"
+        class="mb-3"
+      >
+        <el-form-item label="姓名">
+          <el-input v-model="formData.name"></el-input>
+        </el-form-item>
+        <el-form-item label="聯絡電話">
+          <el-input v-model="formData.phone"></el-input>
+        </el-form-item>
+        <el-form-item label="電子郵件">
+          <el-input v-model="formData.email"></el-input>
+        </el-form-item>
+        <el-form-item label="付款方式">
+          <el-select v-model="formData.payment" placeholder="選擇付款方式">
+            <el-option
+              label="信用卡"
+              value="credit-card"
+            ></el-option>
+            <el-option
+              label="ATM 轉帳"
+              value="atm"
+            ></el-option>
+            <el-option
+              label="貨到付款"
+              value="cod"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+
+      <div class="d-flex justify-content-between align-items-center">
+        <button class="btn btn-outline-secondary" @click="goToStep(1)">
+          上一步
+        </button>
+        <button
+          class="btn btn-primary"
+          @click="submitForm"
+        >
+          下一步
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 3：訂購完成 -->
+    <div v-else-if="currentStep === 3">
+      <h3 class="mb-3">訂購完成</h3>
+      <div class="alert alert-success" role="alert">
+        感謝您的訂購！您的訂單編號為：
+        <strong>{{ orderNumber }}</strong>
+      </div>
+      <p>您共勾選了 {{ selectedItems.length }} 項商品，金額合計 TWD {{ selectedTotalPrice }}。</p>
+      <p>已將訂單資訊寄送至您的電子郵件：{{ formData.email }}</p>
+      <p>若有任何疑問，請聯絡客服中心。</p>
+      <div class="d-flex justify-content-end align-items-center">
+        <button
+          class="btn btn-primary"
+          @click="finishOrder"
+        >
+          返回首頁
+        </button>
+      </div>
+    </div>
+
+    <!-- 底部提醒與加入購物車欄位 -->
+    <div class="bottom-reminder">
+      <p class="mb-2">
+        提醒：需勾選商品才能結帳，並請於規定期限內完成付款。報到時請出示有效身分證件。
+      </p>
+      <p class="mb-2">
+        若有問題，請先查看常見問題或聯絡客服。謝謝！
+      </p>
+      <div class="d-flex justify-content-end">
+        <button
+          class="btn btn-outline-success me-2"
+          @click="addRandomItem"
+        >
+          加入購物車 (範例)
+        </button>
+        <button
+          class="btn btn-secondary"
+          @click="goToStep(1)"
+        >
+          查看購物車
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://unpkg.com/element-plus/dist/index.full.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Element Plus Icons -->
+  <script src="https://unpkg.com/@element-plus/icons-vue"></script>
+  <script src="/cart.js"></script>
+</body>
+</html>
