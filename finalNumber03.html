@@ -164,7 +164,7 @@
         btnNums.forEach((btn) => (btn.disabled = !isEnabled));
       }
 
-      toggleGameButtons(false); 
+      toggleGameButtons(false); // 初始狀態禁用按鈕
       
       function isValidGuess(val) {
         return !isNaN(val) && val >= min && val <= max;
