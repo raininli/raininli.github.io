@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>終極密碼</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .game-container {
+        max-width: 360px;
+        margin: 40px auto;
+      }
+
+      .title {
+        font-size: 20px;
+        border: 1px solid #17a2b8;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .number-input {
+        height: 80px;
+        font-size: 24px;
+        text-align: center;
+        border-radius: 10px;
+        margin-bottom: 20px;
+      }
+
+      .game-btn {
+        height: 80px;
+        font-size: 24px;
+        border-radius: 10px;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container game-container">
+      <div class="title text-info" id="hint">請按下「GameStart」開始遊戲</div>
+
+      <input
+        type="text"
+        class="form-control border-info text-info number-input"
+        id="numberInput"
+        readonly
+      />
+
+      <div class="row g-2">
+        <!-- 第一排 7 8 9 -->
+        <div class="col-4">
+          <button class="btn btn-outline-info game-btn btn-num" data-val="7">
+            7
+          </button>
+        </div>
+        <div class="col-4">
+          <button class="btn btn-outline-info game-btn btn-num" data-val="8">
+            8
+          </button>
+        </div>
+        <div class="col-4">
+          <button class="btn btn-outline-info game-btn btn-num" data-val="9">
+            9
+          </button>
+        </div>
+
+        <!-- 第二排 4 5 6 -->
+        <div class="col-4">
+          <button class="btn btn-outline-info game-btn btn-num" data-val="4">
+            4
+          </button>
+        </div>
+        <div class="col-4">
+          <button class="btn btn-outline-info game-btn btn-num" data-val="5">
+            5
+          </button>
+        </div>
+        <div class="col-4">
+          <button class="btn btn-outline-info game-btn btn-num" data-val="6">
+            6
+          </button>
+        </div>
+
+        <!-- 第三排 1 2 3 -->
+        <div class="col-4">
+          <button class="btn btn-outline-info game-btn btn-num" data-val="1">
+            1
+          </button>
+        </div>
+        <div class="col-4">
+          <button class="btn btn-outline-info game-btn btn-num" data-val="2">
+            2
+          </button>
+        </div>
+        <div class="col-4">
+          <button class="btn btn-outline-info game-btn btn-num" data-val="3">
+            3
+          </button>
+        </div>
+
+        <!-- 第四排 Clear 0 Guess -->
+        <div class="col-4">
+          <button class="btn btn-outline-info game-btn" id="clearBtn">
+            Clear
+          </button>
+        </div>
+        <div class="col-4">
+          <button class="btn btn-outline-info game-btn btn-num" data-val="0">
+            0
+          </button>
+        </div>
+        <div class="col-4">
+          <button class="btn btn-outline-info game-btn" id="guessBtn">
+            Guess
+          </button>
+        </div>
+
+        <!-- 第五排 GameStart -->
+        <div class="col-12">
+          <button class="btn btn-outline-info game-btn" id="startBtn">
+            GameStart
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      let answer,
+        min = 1,
+        max = 100;
+
+      let isStarted = false;
+
+      const input = document.getElementById("numberInput");
+      const hint = document.getElementById("hint");
+      const startBtn = document.getElementById("startBtn");
+      const guessBtn = document.getElementById("guessBtn");
+      const clearBtn = document.getElementById("clearBtn");
+      const btnNums = document.querySelectorAll(".btn-num");
+
+      function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function startGame() {
+        answer = getRandomInt(1, 100);
+        min = 1;
+        max = 100;
+        input.value = "";
+        hint.textContent = `終極密碼 ${min} ~ ${max}`;
+        console.log("答案是", answer);
+        toggleGameButtons(true);
+      }
+
+      function isValidGuess(val) {
+        return !isNaN(val) && val >= min && val <= max;
+      }
+
+      function handleGuess() {
+        if (!isStarted) return;
+        const guess = parseInt(input.value);
+        if (!isValidGuess(guess)) {
+          alert(`請輸入 ${min} 到 ${max} 之間的數字`);
+          input.value = "";
+          return;
+        }
+
+        if (guess === answer) {
+          alert("🎉 恭喜猜中！");
+          hint.textContent = "恭喜猜中！請重新開始遊戲";
+          isStarted = false;
+          return;
+        } else if (guess < answer) {
+          min = guess + 1;
+        } else {
+          max = guess - 1;
+        }
+
+        hint.textContent = `終極密碼 ${min} ~ ${max}`;
+        input.value = "";
+      }
+
+      function appendNumber(val) {
+        if (!isStarted) return;
+        if (input.value === "0") input.value = "";
+        const newVal = input.value + val;
+        if (parseInt(newVal) <= 100) {
+          input.value = newVal;
+        }
+      }
+
+      function clearLastDigit() {
+        if (!isStarted) return;
+        input.value = input.value.slice(0, -1);
+      }
+
+      // 綁定事件
+      startBtn.addEventListener("click", startGame);
+      guessBtn.addEventListener("click", handleGuess);
+      clearBtn.addEventListener("click", clearLastDigit);
+
+      btnNums.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          appendNumber(e.target.dataset.val);
+        });
+      });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

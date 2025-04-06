@@ -20,7 +20,7 @@
             <div class="col col-circle" id="7"></div>
             <div class="col col-circle" id="24"></div>
             <div class="center-box" id="25">
-                <span class="spanChips">0</span><br>
+                <span class="spanChips">您的籌碼剩餘 : 0 枚</span><br>
                 <span class="spanMoney">獲利總金額 : 0 元</span>
             </div>
             <div class="col col-circle" id="8"></div>
@@ -95,133 +95,89 @@
     </div>
    
     <script>
-        //------畫面修改-------
-        
         const colcircle = document.querySelectorAll(".col-circle");
-        const boxArr = Array.from(colcircle);
-        const centerBox = document.querySelector(".center-box");
+        const boxArr = Array.from(colcircle).sort((a, b) => parseInt(a.id) - parseInt(b.id));
         const spanChips = document.querySelector(".spanChips");
+        const spanMoney = document.querySelector(".spanMoney");
         let remainingChips = 30;
+        let totalProfit = 0;
         spanChips.textContent = `您的籌碼剩餘 : ${remainingChips} 枚`;
-
-
-        //更改box的順序
-        boxArr.sort((a,b)=>{
-            return parseInt(a.id)-parseInt(b.id) 
-        })
-
-        // 將圖片依序分配到方塊
-        const images = [
-        "goldenColor/77.svg",
-        "goldenColor/apple.svg",
-        "goldenColor/bell.svg",
-        "goldenColor/cheers.svg",
-        "goldenColor/excellence.svg",
-        "goldenColor/bell.svg",
-        "goldenColor/apple.svg",
-        "goldenColor/excellence.svg"
-        ];
-
-        boxArr.forEach((box, index) => {
-            const imgIndex = index % images.length;
-            const img = document.createElement("img");
-            img.src = images[imgIndex];
-            box.appendChild(img);
-        });
-        
-
-        //-------遊戲邏輯--------
-        const btnStart = document.querySelector(".btn-start")
-        
-
-        function start() {
-            let maxRounds = 1;
-            let interval = 50; 
-            let currentRound = 0;
-            // let delay = 100;
-            // let maxDelay = 500; //~~~如何做出delay漸慢效果??
-            // if(currentRound>=maxRounds){
-            //     delay = Math.min(delay + 20, maxDelay)
-            //     setTimeout(runAnimation,delay)
-            // }
-
-            boxArr.forEach((box,index)=>{
-                box.classList.remove("selectedBox");
-            }) /*刪掉上一輪的selectedBox*/
-
-            btnStart.disabled = true;
-
-            // 定義動畫函式
-            function runAnimation() {
-                //是否能用jQuery的動畫效果，讓boxArr依序高亮?
-                boxArr.forEach((box, index) => {
-                    setTimeout(() => {
-                        box.classList.add("selectedBox");
-                    }, interval * index);
-                    setTimeout(() => {
-                        box.classList.remove("selectedBox");
-                    }, interval * (index + 1));
-                });
-            }  
-            
-            // 立即執行第一輪動畫
-            runAnimation();
-            currentRound++;
-
-            // 設定後續週期性動畫
-            const intervalId = setInterval(() => {
-                runAnimation();
-                currentRound++;
-
-                if (currentRound >= maxRounds) {
-                clearInterval(intervalId);// 停止 setInterval
-
-                    let array = boxArr.slice(0,Math.floor(Math.random() * boxArr.length));
-                    array.forEach((box, index) => {
-                    setTimeout(() => {
-                        box.classList.add("selectedBox");
-                    }, interval *( index + boxArr.length));
-                    setTimeout(() => {
-                        box.classList.remove("selectedBox");
-                    }, interval * (index + 1 + boxArr.length));
-                });
-            
-                setTimeout(() => {
-                    const lastBox = array[array.length - 1];
-                    if (lastBox) {
-                        lastBox.classList.add("selectedBox");
-                    }
-                    btnStart.disabled = false; 
-                }, interval * (array.length + boxArr.length));
-                }  
-                
-            }, interval * boxArr.length);
-            
-        }
-        
-        document.querySelectorAll(".chips-btn").forEach((button)=>{
-            button.addEventListener("click", () =>{
-                const targetId = button.getAttribute("data-target");
-                const targetElement = document.getElementById(targetId);
-                if(targetElement){
-                    let currentValue = parseInt(targetElement.textContent);
-                    targetElement.textContent = currentValue+1;
-                }
-                
-                // const spanMoney = document.querySelector(".spanMoney");
-                if (remainingChips > 0) {
-                remainingChips -= 1;
-                spanChips.textContent = `您的籌碼剩餘 : ${remainingChips} 枚`;
-                }
-            })
-        })
-    
-       
-
-
       
-        
-    </script>
+        const images = [
+          "goldenColor/77.svg",
+          "goldenColor/apple.svg",
+          "goldenColor/bell.svg",
+          "goldenColor/cheers.svg",
+          "goldenColor/excellence.svg",
+          "goldenColor/bell.svg",
+          "goldenColor/apple.svg",
+          "goldenColor/excellence.svg"
+        ];
+      
+        boxArr.forEach((box, index) => {
+          const img = document.createElement("img");
+          img.src = images[index % images.length];
+          box.appendChild(img);
+        });
+      
+        let betArray = [0, 0, 0, 0, 0];
+        document.querySelectorAll(".chips-btn").forEach((button, index) => {
+          button.addEventListener("click", () => {
+            if (remainingChips > 0) {
+              betArray[index]++;
+              const targetId = button.getAttribute("data-target");
+              const targetElement = document.getElementById(targetId);
+              targetElement.textContent = parseInt(targetElement.textContent) + 1;
+              remainingChips--;
+              spanChips.textContent = `您的籌碼剩餘 : ${remainingChips} 枚`;
+            } else {
+              alert("籌碼不足！");
+            }
+          });
+        });
+      
+        function start() {
+          let rounds = 30;
+          let delay = 50;
+          let totalDelay = 0;
+          let finalIndex = Math.floor(Math.random() * boxArr.length);
+      
+          document.querySelector(".btn-start").disabled = true;
+          boxArr.forEach(box => box.classList.remove("selectedBox"));
+      
+          for (let i = 0; i < rounds + finalIndex; i++) {
+            setTimeout(() => {
+              boxArr.forEach(box => box.classList.remove("selectedBox"));
+              boxArr[i % boxArr.length].classList.add("selectedBox");
+            }, totalDelay);
+            totalDelay += delay;
+            delay += 10;
+          }
+      
+          setTimeout(() => {
+            const resultBox = boxArr[finalIndex % boxArr.length];
+            const resultImgSrc = resultBox.querySelector("img").src;
+            checkWin(resultImgSrc);
+            document.querySelector(".btn-start").disabled = false;
+          }, totalDelay + 500);
+        }
+      
+        function checkWin(resultImgSrc) {
+          const icons = ["77.svg", "apple.svg", "bell.svg", "cheers.svg", "excellence.svg"];
+          let roundProfit = 0;
+          icons.forEach((icon, index) => {
+            if (resultImgSrc.includes(icon)) {
+              roundProfit = betArray[index] * 10;
+            }
+          });
+          totalProfit += roundProfit;
+          spanMoney.textContent = `獲利總金額 : ${totalProfit} 元`;
+      
+          // 重置下注欄位
+          betArray = [0, 0, 0, 0, 0];
+          document.querySelectorAll(".col-chips").forEach(el => el.textContent = "0");
+        }
+      </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </body>
 </html>
