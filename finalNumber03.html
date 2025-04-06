@@ -152,10 +152,20 @@
         max = 100;
         input.value = "";
         hint.textContent = `終極密碼 ${min} ~ ${max}`;
+        isStarted = true; 
         console.log("答案是", answer);
         toggleGameButtons(true);
       }
 
+      
+      function toggleGameButtons(isEnabled) {
+        guessBtn.disabled = !isEnabled;
+        clearBtn.disabled = !isEnabled;
+        btnNums.forEach((btn) => (btn.disabled = !isEnabled));
+      }
+
+      toggleGameButtons(false); 
+      
       function isValidGuess(val) {
         return !isNaN(val) && val >= min && val <= max;
       }
